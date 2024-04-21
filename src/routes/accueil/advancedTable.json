@@ -1,0 +1,24 @@
+[
+    {
+      "id": 1,
+      "product_name": "Product 1",
+      "brand": "Brand A",
+      "category": "Category X",
+      "price": 100
+    },
+    {
+      "id": 2,
+      "product_name": "Product 2",
+      "brand": "Brand B",
+      "category": "Category Y",
+      "price": 200
+    },
+    {
+      "id": 3,
+      "product_name": "Product 3",
+      "brand": "Brand C",
+      "category": "Category Z",
+      "price": 300
+    }
+  ]
+  
