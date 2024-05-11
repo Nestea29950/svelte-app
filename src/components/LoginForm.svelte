@@ -37,16 +37,25 @@
       console.log('Réponse du serveur :', data);
       token = data.token;
       let user = data.user; 
+      let payload = data.payload;
       
       localStorage.setItem('token', token);
       sessionStorage.setItem('token', token);
-
-      localStorage.setItem('user', JSON.stringify(user));
-       // Récupérer le token de la réponse
      
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('payload', JSON.stringify(payload));
       
       loginSuccess = true;
-      goto('/accueil');
+      if(loginSuccess == true && payload.userType == 'customer'){
+        goto('/accueil');
+      }
+      else if (payload.userType == 'deliveryMan'){
+        goto('/suivilivraison');
+      }
+      else{
+        goto('/restaurant-add');
+      }
+      
     })
     .catch(error => {
       console.error('Erreur :', error);

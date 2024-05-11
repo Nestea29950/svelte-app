@@ -9,8 +9,8 @@
  let menus = [];
   let dishes = [];
   function addToCart(item) {
+    item.restaurantId = data.post.id;
     cart.update(items => [...items, item]);
-
   }
     // Récupération du token depuis le localStorage
     const token = localStorage.getItem('token');
@@ -36,7 +36,7 @@
     });
 </script>
 
-<div class="container mx-auto py-12">
+<div class="container mx-auto p-8">
   <!-- Affichage des menus -->
   <h2 class="text-xl font-semibold mb-4">Menus</h2>
   <ul>

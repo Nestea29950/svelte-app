@@ -18,5 +18,5 @@
   </script>
   
   {#if isAuthenticated}
-    <slot /> <!-- Display protected content -->
+    <slot /> 
   {/if}

@@ -21,7 +21,19 @@
   
       // If not authenticated, redirect to login page
       if (isAuthenticated == true) {
-        goto('/accueil');
+        let payload = localStorage.getItem('payload');
+        payload = JSON.parse(payload)
+        let userType = payload.userType;
+        if(userType == 'customer'){
+          goto('/accueil');
+        }
+        else if(userType == 'deliveryMan'){
+          goto('/suivilivraison');
+        }
+        else{
+          goto('/restaurant-add');
+        }
+        
       }
     });
   </script>
