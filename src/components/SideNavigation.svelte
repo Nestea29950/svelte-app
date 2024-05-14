@@ -38,7 +38,7 @@
     });
   </script>
   <ProtectedRoute>
-  <footer class="block lg:hidden w-full flex justify-center z-10 bg-white shadow-md border-t" style="position: fixed; bottom: 0; left: 50%; transform: translate(-50%);">
+  <footer class="block  w-full flex justify-center z-10 bg-white shadow-md border-t" style="position: fixed; bottom: 0; left: 50%; transform: translate(-50%);">
       <div class="bg-blacklight py-2 px-2 rounded-full w-full flex justify-between items-center text-gray-700">
         
       
