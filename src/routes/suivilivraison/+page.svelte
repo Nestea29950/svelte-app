@@ -16,7 +16,7 @@
     let user = localStorage.getItem('user');
     user = JSON.parse(user);
 
-    const url = `http://localhost:3000/api/deliveries?userType=deliveryMan&userid=${user.id}`;
+    const url = `https://delivrpasapi.duckdns.org/api/deliveries?userType=deliveryMan&userid=${user.id}`;
 
     const requestOptions = {
         method: "GET", 
@@ -44,7 +44,7 @@
       console.log("Delivery finished!", selectedDelivery.id);
     } else {
       try {
-        const response = await fetch(`http://localhost:3000/api/deliveries/${selectedDelivery.id}`, {
+        const response = await fetch(`https://delivrpasapi.duckdns.org/api/deliveries/${selectedDelivery.id}`, {
           method: 'DELETE',
           headers: myHeaders
         });

@@ -24,7 +24,7 @@
         redirect: "follow"
     };
         // Appel à l'API pour récupérer les données des restaurants
-        fetch("http://localhost:3000/api/restaurants/" + data.post.id, requestOptions)
+        fetch("https://delivrpasapi.duckdns.org/api/restaurants/" + data.post.id, requestOptions)
             .then(response => response.json())
             .then(result => {
               menus = result.card.menu;

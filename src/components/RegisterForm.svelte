@@ -27,7 +27,7 @@
   function handleSubmit(event) {
     event.preventDefault();
     console.log(formData)
-    fetch('http://localhost:3000/api/' + selectedOption, {
+    fetch('https://delivrpasapi.duckdns.org/api/' + selectedOption, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

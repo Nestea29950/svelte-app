@@ -20,7 +20,7 @@
   function handleSubmit(event) {
     event.preventDefault();
 
-    fetch('http://localhost:3000/api/login', {
+    fetch('https://delivrpasapi.duckdns.org/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

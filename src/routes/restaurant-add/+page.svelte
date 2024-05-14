@@ -27,7 +27,7 @@
     redirect: "follow"
   };
 
-  fetch("http://localhost:3000/api/restaurants/" + user.id, requestOptions)
+  fetch("https://delivrpasapi.duckdns.org/api/restaurants/" + user.id, requestOptions)
     .then(response => response.json())
     .then(result => {
       menus = result.card.menu;
@@ -65,7 +65,7 @@ const requestOptions = {
 };
 
     try {
-      const response = await fetch("http://localhost:3000/api/menus", requestOptions);
+      const response = await fetch("https://delivrpasapi.duckdns.org/api/menus", requestOptions);
       if (response.ok) {
         // Mettre à jour l'affichage ou effectuer d'autres actions si nécessaire
         console.log("Menu ajouté avec succès");
@@ -108,7 +108,7 @@ const requestOptions = {
 };
 
     try {
-      const response = await fetch("http://localhost:3000/api/dishes", requestOptions);
+      const response = await fetch("https://delivrpasapi.duckdns.org/api/dishes", requestOptions);
       if (response.ok) {
         // Mettre à jour l'affichage ou effectuer d'autres actions si nécessaire
         console.log("Plat ajouté avec succès");
@@ -134,7 +134,7 @@ const requestOptions = {
   };
 
   try {
-    const response = await fetch(`http://localhost:3000/api/menus/${menuId}`, requestOptions);
+    const response = await fetch(`https://delivrpasapi.duckdns.org/api/menus/${menuId}`, requestOptions);
     if (response.ok) {
       // Mettre à jour l'affichage ou effectuer d'autres actions si nécessaire
       console.log("Menu supprimé avec succès");
@@ -160,7 +160,7 @@ async function deleteDish(dishId) {
   };
 
   try {
-    const response = await fetch(`http://localhost:3000/api/dishes/${dishId}`, requestOptions);
+    const response = await fetch(`https://delivrpasapi.duckdns.org/api/dishes/${dishId}`, requestOptions);
     if (response.ok) {
       // Mettre à jour l'affichage ou effectuer d'autres actions si nécessaire
       console.log("Plat supprimé avec succès");

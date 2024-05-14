@@ -44,7 +44,7 @@
     };
 
     // Appel à l'API pour récupérer les données des livreurs
-    fetch("http://localhost:3000/api/deliveryman" , requestOptions)
+    fetch("https://delivrpasapi.duckdns.org/api/deliveryman" , requestOptions)
         .then(response => response.json())
         .then(result => {
           deliverymen = result;
@@ -78,7 +78,7 @@
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/deliveries", requestOptions);
+      const response = await fetch("https://delivrpasapi.duckdns.org/api/deliveries", requestOptions);
       if (response.ok) {
         // Supprimer uniquement les articles achetés du panier
         cart.set(cartItems.filter(item => !filteredCartItems.includes(item)));

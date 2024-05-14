@@ -42,7 +42,7 @@
 
     onMount(() => {
         // Appel à l'API pour récupérer les données des restaurants
-        fetch("http://localhost:3000/api/restaurants", requestOptions)
+        fetch("https://delivrpasapi.duckdns.org/api/restaurants", requestOptions)
             .then(response => response.json())
             .then(result => {
                 // Stockage des données des restaurants dans les deux variables
