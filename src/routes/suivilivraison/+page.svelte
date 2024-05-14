@@ -8,27 +8,42 @@
   let selectedDelivery = null;
   const dispatcher = createEventDispatcher();
 
-  const token = localStorage.getItem('token');
+  let token = null;
   const myHeaders = new Headers();
-  myHeaders.append("Authorization", `Bearer ${token}`);
+
+  // Check if localStorage is available
+  if (typeof localStorage !== 'undefined') {
+    token = localStorage.getItem('token');
+  }
+
+  if (token) {
+    myHeaders.append("Authorization", `Bearer ${token}`);
+  }
 
   onMount(() => {
-    let user = localStorage.getItem('user');
-    user = JSON.parse(user);
+    let user = null;
 
-    const url = `https://delivrpasapi.duckdns.org/api/deliveries?userType=deliveryMan&userid=${user.id}`;
+    // Check if localStorage is available
+    if (typeof localStorage !== 'undefined') {
+      user = localStorage.getItem('user');
+      user = JSON.parse(user);
+    }
 
-    const requestOptions = {
-        method: "GET", 
-        headers: myHeaders
-    };
+    if (user && token) {
+      const url = `https://delivrpasapi.duckdns.org/api/deliveries?userType=deliveryMan&userid=${user.id}`;
 
-    fetch(url, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            courses = result;
-        })
-        .catch(error => console.error(error));
+      const requestOptions = {
+          method: "GET", 
+          headers: myHeaders
+      };
+
+      fetch(url, requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              courses = result;
+          })
+          .catch(error => console.error(error));
+    }
   });
 
   function finishOrDeleteDelivery(delivery) {
@@ -36,11 +51,9 @@
     dispatcher('openModal');
   }
 
-  
-
   async function confirmFinishOrDeleteDelivery(finish) {
     if (finish) {
-      // Mettez ici votre logique pour marquer la livraison comme terminée
+      // Put your logic here to mark delivery as finished
       console.log("Delivery finished!", selectedDelivery.id);
     } else {
       try {
@@ -64,6 +77,7 @@
     }
   }
 </script>
+
 
 <div class="container mx-auto p-8">
   <ProtectedRoute>

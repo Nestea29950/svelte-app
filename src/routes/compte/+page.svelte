@@ -2,14 +2,23 @@
   import ProtectedRoute from "../../components/ProtectedRoute.svelte";
   import { goto } from '$app/navigation';
 
-  let user = localStorage.getItem('user');
-  user = JSON.parse(user);
+  let user = null;
+
+  // Check if localStorage is available
+  if (typeof localStorage !== 'undefined') {
+    user = localStorage.getItem('user');
+    user = JSON.parse(user);
+  }
 
   function signOut() {
-    localStorage.removeItem('token');
-    goto('/');
+    // Check if localStorage is available before removing item
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('token');
+      goto('/');
+    }
   }
 </script>
+
 
 <div class="p-4">
   <ProtectedRoute>

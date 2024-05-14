@@ -6,20 +6,25 @@
   let deliverymen = [];
   let selectedDeliveryManId;
   let cartItems = [];
-  let user = JSON.parse(localStorage.getItem('user'));
+  let user = null;
 
-  // Abonnez-vous au magasin de panier pour mettre à jour la liste des éléments du panier
+  // Check if localStorage is available
+  if (typeof localStorage !== 'undefined') {
+    user = JSON.parse(localStorage.getItem('user'));
+  }
+
+  // Subscribe to the cart store to update the cart items list
   cart.subscribe(value => {
     cartItems = value;
     console.log(cartItems); 
   });
 
-  // Fonction pour supprimer un article du panier
+  // Function to remove an item from the cart
   function removeFromCart(item) {
     cart.update(items => items.filter(i => i !== item));
   }
 
-  // Fonction pour regrouper les articles par restaurantId
+  // Function to group items by restaurantId
   function groupItemsByRestaurant(items) {
     const groupedItems = {};
     items.forEach(item => {
@@ -32,70 +37,76 @@
   }
 
   onMount(() => {
-    const token = localStorage.getItem('token');
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${token}`);
+    // Check if localStorage is available
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem('token');
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", `Bearer ${token}`);
 
-    const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow"
-    };
+      const requestOptions = {
+          method: "GET",
+          headers: myHeaders,
+          redirect: "follow"
+      };
 
-    // Appel à l'API pour récupérer les données des livreurs
-    fetch("https://delivrpasapi.duckdns.org/api/deliveryman" , requestOptions)
-        .then(response => response.json())
-        .then(result => {
-          deliverymen = result;
-        })
-        .catch(error => console.error(error));
+      // Call the API to fetch deliverymen data
+      fetch("https://delivrpasapi.duckdns.org/api/deliveryman" , requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            deliverymen = result;
+          })
+          .catch(error => console.error(error));
+    }
   });
 
   async function purchase(restaurantId) {
-    const token = localStorage.getItem('token');
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    const filteredCartItems = cartItems.filter(item => item.restaurantId == restaurantId);
-    console.log('Contenu du panier filtré pour le restaurant', restaurantId, ':', filteredCartItems);
+    // Check if localStorage is available
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem('token');
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+      const filteredCartItems = cartItems.filter(item => item.restaurantId == restaurantId);
+      console.log('Filtered cart items for restaurant', restaurantId, ':', filteredCartItems);
 
 
-    const raw = JSON.stringify({
-      "deliveryManId": selectedDeliveryManId,
-      "restaurantId": restaurantId,
-      "customerId": user.id,
-      "orderItem": {
-        cartItems: filteredCartItems
+      const raw = JSON.stringify({
+        "deliveryManId": selectedDeliveryManId,
+        "restaurantId": restaurantId,
+        "customerId": user.id,
+        "orderItem": {
+          cartItems: filteredCartItems
+        }
+      });
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+      };
+
+      try {
+        const response = await fetch("https://delivrpasapi.duckdns.org/api/deliveries", requestOptions);
+        if (response.ok) {
+          // Remove only the purchased items from the cart
+          cart.set(cartItems.filter(item => !filteredCartItems.includes(item)));
+          console.log("Purchase successful!");
+        } else {
+          console.error("Error during purchase:", response.status);
+        }
+      } catch (error) {
+        console.error("An error occurred during the request:", error);
       }
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow"
-    };
-
-    try {
-      const response = await fetch("https://delivrpasapi.duckdns.org/api/deliveries", requestOptions);
-      if (response.ok) {
-        // Supprimer uniquement les articles achetés du panier
-        cart.set(cartItems.filter(item => !filteredCartItems.includes(item)));
-        console.log("Achat effectué avec succès !");
-      } else {
-        console.error("Erreur lors de l'achat:", response.status);
-      }
-    } catch (error) {
-      console.error("Une erreur s'est produite lors de la requête:", error);
     }
   }
 </script>
 
 <ProtectedRoute>
   <div class="container mx-auto p-8">
-    <!-- Affichage du contenu du panier -->
-    <h2 class="text-xl font-semibold mb-4">Votre panier</h2>
+    <!-- Display the cart content -->
+    <h2 class="text-xl font-semibold mb-4">Your Cart</h2>
     {#each Object.entries(groupItemsByRestaurant(cartItems)) as [restaurantId, items]}
       <div>
         <h3 class="text-lg font-semibold mb-2">Restaurant ID: {restaurantId}</h3>
@@ -104,22 +115,22 @@
             <li class="flex justify-between items-center border-b py-2">
               <span>{item.nom}</span>
               <div>
-                <!-- Bouton pour supprimer l'article du panier -->
-                <button class="bg-red-500 text-white px-4 py-1 rounded mr-2" on:click={() => removeFromCart(item)}>Supprimer</button>
-                <!-- Bouton pour modifier l'article (ajouter des fonctionnalités selon vos besoins) -->
-                <button class="bg-blue-500 text-white px-4 py-1 rounded">Modifier</button>
+                <!-- Button to remove item from cart -->
+                <button class="bg-red-500 text-white px-4 py-1 rounded mr-2" on:click={() => removeFromCart(item)}>Remove</button>
+                <!-- Button to modify item (add functionalities as needed) -->
+                <button class="bg-blue-500 text-white px-4 py-1 rounded">Modify</button>
               </div>
             </li>
           {/each}
         </ul>
-        <!-- Sélection du livreur -->
+        <!-- Deliveryman selection -->
         <select bind:value={selectedDeliveryManId} class="bg-white border border-gray-300 rounded px-4 py-2 mt-4">
           {#each deliverymen as deliveryman}
             <option value={deliveryman.id}>{deliveryman.name}</option>
           {/each}
         </select>
-        <!-- Bouton pour effectuer l'achat -->
-        <button class="bg-green-500 text-white px-4 py-2 rounded-md mt-4" on:click={() => purchase(parseInt(restaurantId))}>Effectuer l'achat</button>
+        <!-- Button to make purchase -->
+        <button class="bg-green-500 text-white px-4 py-2 rounded-md mt-4" on:click={() => purchase(parseInt(restaurantId))}>Make Purchase</button>
       </div>
     {/each}
   </div>
